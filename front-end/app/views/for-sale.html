@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="col-md-3">
+        <p>&nbsp;</p>
+        <p class="font-text-bold">Categorias</p>
+        <p><a href="clasificados/trabajos">Trabajos</a> </p>
+        <p><a href="clasificados/for-sale">Trucks for Sale</a> </p>
+        <p><a href="clasificados/trailers-containers">Trailers and Containers</a> </p>
+        <p><a href="clasificados/mecanicos" title="Encuentra mechanicos">Mechanics</a> </p>
+        <p><a href="clasificados/soldadores" title="Find welders">Maintanance</a> </p>
+        <p><a href="clasificados/electricos.aspx?catid=6">Electricians</a> </p>
+        <p><a href="clasificados/servicios-general" title="Encuentra otras cosas.">General Services</a> </p>               
+        <p class="border-bottom"></p>
+    </div>
+    <div class="col-md-9 container-data-list-parts">
+        <!-- generate the content -->
+        <h3><span id="ContentPlaceHolder1_label">For Sale</span> »</h3>
+        <p>&nbsp;</p>
+    <!--
+        <table>
+            <tr ng-repeat="item in forsale">
+                <td>
+                    
+                    <h3><a href="#/for-sale-details/{{ads.type}}/{{ads.id}}">{{item.title}}</a></h3>
+                    <p>
+                        {{item.description}}
+                    </p>
+                    <p>{{item.datePosted}}</p>
+                </td>
+            </tr>
+        </table>style="width: 64px; height: 64px;"
+    -->
+        <div class="media" ng-repeat="item in forsale">
+          <div class="media-left pull-left">
+            <a href="#/for-sale-details/{{ads.type}}/{{ads.id}}">
+              <img class="media-object" src="{{item.imgUrl}}" alt="{{item.title}}" >
+            </a>
+          </div>
+          <div class="media-body">
+            <h3 class="media-heading">
+                <a href="#/for-sale-details/{{item.type}}/{{item.id}}">{{item.title}}
+                </a>
+            </h3>
+            {{item.description}}
+          </div>
+        </div>        
+
+    </div>
+</div>

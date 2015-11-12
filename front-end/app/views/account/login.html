@@ -1,0 +1,63 @@
+<style type="text/css">
+    .main-container a:link,
+    a:visited {
+        color: #0096FF;
+        text-decoration: none;
+    }
+    
+    .el-contenedor {
+        margin-left: auto;
+        margin-right: auto;
+        width: 450px
+    }
+    
+    .la-forma-contenedor {
+        width: 100%;
+        padding: 20px;
+        border: 1px solid rgb(232, 232, 232);
+        margin-top: 30px;
+        box-shadow: 0px 1px 2px 0px #c5c5c5;
+        background-color: #FCFCFC;
+    }
+    
+    .label {
+        font-weight: 600;
+        color: #737373;
+        font-size: 16px;
+    }
+    
+    .form-control {
+        width: 100%;
+        height: 50px
+    }
+</style>
+<div class="el-contenedor">
+    <h3>Login</h3>
+    
+    <div class="la-forma-contenedor">
+
+        <div style="text-align: left">
+
+            <form class="form">
+                <p>
+                    Username:
+                    <br/>
+                    <input type="tex" ng-model="user.username" class="form-control" required autofocus>
+                </p>
+                <p>
+                    Password:
+                    <br/>
+                    <input type="password" ng-model="user.password" class="form-control" required>
+                </p>
+
+                <!-- Submit form -->
+                <p>
+                    <button class="btn btn-primary" ng-click="login()">Login</button>
+                </p>
+            </form>
+            <p><a href="/" style="font-size: small" title="Click here to recover your password">Forgot password?</a></p>
+        </div>
+    </div>
+    <p>&nbsp;</p>
+    <p>No tienese cuenta? <a href="#/account/create">crea tu propia cuenta ahora mismo!</a></p>
+</div>

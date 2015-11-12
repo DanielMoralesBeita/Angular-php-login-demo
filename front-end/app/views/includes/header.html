@@ -1,0 +1,21 @@
+<ul ng-controller="IncludesHeaderCtrl" class="navigation">
+   
+    <li ng-if="!isUserAuthenticated">
+        <a href="#/account/dashboard">Sign in</a>
+    </li>
+    <li ng-if="isUserAuthenticated">
+            <a ng-href="#/account/dashboard">My Account</a>
+     </li>
+    <li ng-if="isUserAuthenticated">
+        <a href="#/logout">Logout</a>
+    </li>
+    <li ng-if="!isUserAuthenticated"
+        <p class="container-button-post">
+            <a href="#/anunciate" class="download" style="color:#fff">Anunciate</a></p>
+    </li>
+
+    <li ng-if="isUserAuthenticated"
+        <p class="container-button-post">
+            <a href="#/account/new-post" class="download" style="color:#fff">Crear anuncio</a></p>
+    </li>
+</ul>

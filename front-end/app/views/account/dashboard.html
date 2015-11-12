@@ -1,0 +1,32 @@
+<div class="container">
+    <h4 class="text-muted">My Account</h4>
+    
+    <!--<p>Account status: {{status}}</p>-->
+    
+    <hr/>
+    
+    <!--<p><a href="#/account/editar-perfil"><i class="fa fa-pencil-square-o"></i> Editar perfil</a></p>-->
+    <h1>My job posts </h1>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Posted Date</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="myposts in posts">
+                <td><a href="#/trabajos-details/{{myposts.id}}/{{myposts.owner_id}}">{{myposts.title}}</a></td>
+                <td>{{myposts.description}}</td>
+                <td>{{myposts.datePosted}}</td>
+                <td><button class="btn btn-danger" ng-click="removePost(myposts.id)">remove</button></td>
+                <td><button class="btn btn-primary" ng-click="editJob(myposts.id)">Edit</button></td>
+            </tr>
+        </tbody>
+    </table>    
+    
+</div>

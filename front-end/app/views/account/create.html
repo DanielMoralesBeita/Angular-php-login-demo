@@ -1,0 +1,83 @@
+<style type="text/css">
+    .main-container a:link,
+    a:visited {
+        color: #0096FF;
+        text-decoration: none;
+    }
+    
+    .el-contenedor {
+        margin-left: auto;
+        margin-right: auto;
+        width: 450px
+    }
+    
+    .la-forma-contenedor {
+        width: 100%;
+        padding: 20px;
+        border: 1px solid rgb(232, 232, 232);
+        margin-top: 30px;
+        box-shadow: 0px 1px 2px 0px #c5c5c5;
+        background-color: #FCFCFC;
+    }
+    
+    .label {
+        font-weight: 600;
+        color: #737373;
+        font-size: 16px;
+    }
+    
+    .form-control {
+        width: 100%;
+        height: 50px
+    }
+    #message-success { text-align: center }
+    #spinner { margin-top: 10px }
+    
+</style>
+<div class="el-contenedor">
+    <p id="spinner" class="hide"><i class="fa fa-spinner fa-pulse fa-2x"></i> creating your account...</p>
+    <h3>Crear nueva cuenta</h3>
+    <div class="la-forma-contenedor">
+        <form>
+            <div style="text-align: left">
+
+                <p>
+                    <label for="username" class="label">Username:</label>
+                    <br>
+                    <input type="text" ng-model="newUser.username" id="email" class="form-control" autofocus="" required>
+                </p>
+                <p>
+                    <label for="email" class="label">Correo electronico:</label>
+                    <br>
+                    <input type="text" ng-model="newUser.email" id="email" class="form-control" autofocus="" required placeholder="email@mail.com">
+                </p>
+                <p>
+                    <label for="password" class="label">Password:</label>
+                    <br>
+                    <input type="password" ng-model="newUser.password" id="Password" class="form-control" required="">
+                </p>
+                <p>
+                    <label for="confirm_password" class="label">Confirmar Password:</label>
+                    <br>
+                    <input type="password" ng-model="newUser.confirmPassword" id="LoginUser_Password" class="form-control" required="">
+                </p>
+
+                <!-- submit form -->
+                <p>
+                <button ng-click="signUp()" class="btn btn-warning btn-block" style="padding: 20px; font-size: 20px; background-color: #FF9907;">
+                    Comensar mi primer anucio gratis
+                </button>
+                </p>
+                <!-- disclaimer -->
+                <p class="text-muted text-small text-center">
+                    * 100% Privacidad. Cuando creas to cuenta, aceptas nuestros <a href="#">Terminos de uso</a> y de <a href="#">Privacidad</a>
+                </p>
+            </div>
+        </form>
+    </div>
+    <div id="message-success" class="hide">
+        <h2>Your account was created!</h2>
+        <p>We sent you an email confirmation to the following email address: <strong>{{emailConfirmation}}</strong></p>
+        <p>Once you confirm your email, <a href="#/account/login">Click here</a> to login to your account and add your first job.</p>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+<p>&nbsp;</p>
+    <div class="container">
+        <div class="col-md-8">
+            <h2>
+            {{trabajo.title}}
+            </h2>
+            <p><a href="#/profile/{{trabajo.owner_id}}" target="_blank">{{trabajo.companyName}}</a></p>
+        </div>
+        <div class="col-md-4">
+            <!--<button class="btn btn-primary pull-right">Apply now</button>-->
+        </div>   
+        <div class="clearfix"></div>
+        <p style="border-bottom:1px dotted silver">&nbsp;</p>   
+        
+        <div class="col-md-8">
+            <h4 class="text-muted">DESCRIPCION</h4>  
+            <p>{{trabajo.description}}</p>
+            <br />
+        </div>
+        <div class="col-md-4">
+            <form class="form" style="background-color: #EDEDED; padding: 10px;">
+                <h4 class="text-muted">Subscribete y recibe notificaiones de empleo</h4>  
+                <p><input type="text" class="form-control" placeholder="correo@example.com"></p>
+                <p><input type="submit" class="btn btn-default"></p>
+            </form>
+            <br />
+        </div>
+        <div class="clear"></div>
+        
+            <div class="col-md-6">
+                <h4 class="text-muted">REQUERIMIENTOS</h4>  
+                {{trabajo.requirements}}
+                <br />
+                
+            </div>
+         
+            <div class="col-md-6">
+                <h4 class="text-muted">LOCALIDAD</h4>  
+                <p>{{trabajo.location}}, {{trabajo.state}}</p>
+                <p>&nbsp;</p>
+                <h4 class="text-muted">COMPENSACION</h4>  
+                <p>{{trabajo.compensation}}</p>
+            </div>
+        <div class="clear"></div>
+        <div class="col-md-8">
+            <h4 class="text-muted">BENEFICIOS</h4>  
+            <br />
+            {{trabajo.benefits}}
+        </div>
+        <div class="clear"></div>
+        <div class="col-md-8">
+            <h4 class="text-muted">COMO APLICAR</h4>  
+            {{trabajo.howToApply}}
+            <br />
+        </div>
+        <div class="clear"></div>
+        <div class="col-md-8">
+            <h4 class="text-muted">ACERCA DE NOSTROS</h4>  
+            <p>{{trabajo.about}}</p>
+            <br />
+        </div>
+
+        <div class="clear"></div>
+        <div>
+            <span class="text-muted">Publicado el {{trabajo.datePosted}}</span>
+        </div>
+        <hr>
+        <div>
+            <a href="mailto:n@lol.com" class="btn btn-primary" style="color:white">Contactar empleador</a>
+        </div>        
+    </div>

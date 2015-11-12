@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="col-md-3 no-padding-left">
+        <p>&nbsp;</p>
+        <p class="font-text-bold">Categorias</p>
+        <p><a href="#/trabajos">Trabajos</a> </p>
+        <!--
+        <p>Trucks for Sale</p>
+        <p>Trailers and Containers</p>
+        <p>Mechanics</p>
+        <p>Maintanance</p>
+        <p>Electricians</p>
+        <p>General Services</p>    
+        -->
+        <p class="text-muted" style="font-size:10px">Mas categorias muy pronto</p>           
+        <p class="border-bottom"></p>
+    </div>
+    <div class="col-md-9 container-data-list-parts">
+        <!-- generate the content -->
+        <p id="spinner" class="hide"><i class="fa fa-spinner fa-pulse fa-2x"></i> loading...</p>
+        <h3><span id="ContentPlaceHolder1_label">Trabajos</span> »</h3>
+        <table>
+            <tr ng-repeat="ads in clasificados">
+                <td>
+                    <!--#details/:category/:id-->
+                    <h3><a href="#/trabajos-details/{{ads.id}}/{{ads.owner_id}}">{{ads.title}}</a></h3>
+                    <p>Posted by: LilosTruck, Inc</p>
+                    <p>
+                        {{ads.description}}
+                    </p>
+                    <p>{{ads.datePosted}}</p>
+                </td>
+            </tr>
+        </table>
+        <p class="border-bottom"></p>
+    </div>
+</div>
