@@ -11,7 +11,12 @@ that it's no longer supported, but some of the principles on how to do authentic
 
 View [demo in progress..](http://www.nead23.com/demo/jobs-board/index.html)
 
-## The following is a list of changes:
+## The following is a list of pending changes:
 - The ability to recover passwords.
 - The ability to send emails when a user registers for the first time and confirmation.
 - Front end test cases for the login and registration as well as the other features.
+
+Front End
+
+- The ability to edit posts.
+- The ability to notify users when a process is happening. For example, did the login went thru.
