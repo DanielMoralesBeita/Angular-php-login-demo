@@ -8,10 +8,11 @@
  * Service in the 343LandingPageApp.
  */
 angular.module('343LandingPageApp')
-    .factory('authFact', function ($http, $q, $window) {
+    .factory('authFact', ['$http', '$q', '$window', function ($http, $q, $window) {
         // Service logic
         var user;
         var cachedToken;
+        var baseAPI = 'http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/';
 
         function login(user) {
 
@@ -19,7 +20,7 @@ angular.module('343LandingPageApp')
 
             var req = {
                 method: 'POST',
-                url: 'http://localhost:62774/api/v1/account/login',
+                url: baseAPI + 'account/login',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -49,14 +50,14 @@ angular.module('343LandingPageApp')
         }
 
         /**
-         *   Register will create a new user. Upon success, 
-         *   we will return the 'response' from the server
-         */
+        *   Register will create a new user. Upon success, 
+        *   we will return the 'response' from the server
+        */
         function register(newUser) {
 
             var req = {
                 method: 'POST',
-                url: 'http://localhost:62774/api/v1/account/register',
+                url: baseAPI + 'account/register',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -69,8 +70,8 @@ angular.module('343LandingPageApp')
         }
 
         /**
-         *   returns the token from cached. Otherwise, it will set from localstorage.
-         */
+        *   returns the token from cached. Otherwise, it will set from localstorage.
+        */
         function getToken() {
             if (!cachedToken) {
                 cachedToken = $window.localStorage.getItem('userInfo');
@@ -80,29 +81,29 @@ angular.module('343LandingPageApp')
         }
 
         /**
-         *   isUserAuthenticated returns true if we have a valid token.
-         *   false otehrwise
-         */
+        *   isUserAuthenticated returns true if we have a valid token.
+        *   false otehrwise
+        */
         function isUserAuthenticated() {
             return !!getToken();
         }
 
         /**
-         *   returns information about the user
-         */
+        *   returns information about the user
+        */
         function getUserInfo() {
             return user;
         }
 
         /**
-         * Logs the user out.
-         */
+        * Logs the user out.
+        */
         function logout() {
             var deferred = $q.defer();
 
             var reqLogout = {
                 method: 'POST',
-                url: 'http://localhost:62774/api/v1/account/logout',
+                url: baseAPI + 'account/logout',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
@@ -138,4 +139,4 @@ angular.module('343LandingPageApp')
             logout: logout,
             getToken: getToken
         };
-    });
+    }]);

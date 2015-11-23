@@ -75,7 +75,7 @@ class Trucking {
 
                $sql = "INSERT 
                       INTO 
-                        trucking_jobs (owner_id, title, description, requirements, location, compensation, benefits, howToApply, datePosted) 
+                        trucking_jobs (ownerID, title, description, requirements, location, compensation, benefits, howToApply, datePosted) 
                        VALUES 
                        (:owner_id, :title, :description, :requirements, :location, :compensation, :benefits, :howToApply, :date)";
                 $query = $pdo->prepare($sql);
@@ -120,9 +120,9 @@ class Trucking {
     */
     public function getJobDetails($id, $owner_id){
         
-        $sql = 'SELECT a.owner_id, a.title, a.description, a.requirements, a.location, a.compensation, a.benefits, a.howToApply, a.datePosted, b.companyName, b.about, b.serviceDescription
+        $sql = 'SELECT a.ownerID, a.title, a.description, a.requirements, a.location, a.compensation, a.benefits, a.howToApply, a.datePosted, b.companyName, b.about, b.serviceDescription
             FROM trucking_jobs a, company_profile b
-            WHERE a.id = :job_id && b.ownerId = :owner_id
+            WHERE a.id = :job_id && b.ownerID = :owner_id
             LIMIT 1';
 
         $pdo = $this->db->getConnection();
@@ -145,8 +145,8 @@ class Trucking {
     * Returns the list of jobs posted by a user.
     */
     public function getUserListings($id){
-        $sql = "SELECT id, owner_id, title, description, requirements, location, compensation, benefits, howToApply, datePosted
-                FROM trucking_jobs WHERE owner_id = :id";
+        $sql = "SELECT id, ownerID, title, description, requirements, location, compensation, benefits, howToApply, datePosted
+                FROM trucking_jobs WHERE ownerID = :id";
 
         $pdo = $this->db->getConnection();
         $query = $pdo->prepare($sql);
@@ -169,7 +169,7 @@ class Trucking {
     */
     public function deleteJobPost($id, $owner_id){
         $pdo = $this->db->getConnection();
-        $query = $pdo->prepare("DELETE FROM trucking_jobs WHERE id = :id && owner_id = :owner_id LIMIT 1");
+        $query = $pdo->prepare("DELETE FROM trucking_jobs WHERE id = :id && ownerID = :owner_id LIMIT 1");
         $query->bindValue(':id', $id, PDO::PARAM_INT);
         $query->bindValue(':owner_id', $owner_id, PDO::PARAM_INT);
         

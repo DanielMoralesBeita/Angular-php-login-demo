@@ -12,7 +12,7 @@ angular.module('343LandingPageApp')
 
         var token = JSON.parse(authFact.getToken()).token;
 
-        var url = 'http://localhost:62774/api/v1/account/dashboard';
+        var url = 'http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/account/dashboard';
 
         $scope.loadData = function () {
 
@@ -39,8 +39,7 @@ angular.module('343LandingPageApp')
                     'token': token
                 };
 
-                $http.delete('http://localhost:62774/api/v1/trucking/job/' + postId + '?token=' + token, {token:token})
-                .then(function (response) {
+                $http.delete('http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/trucking/job/' + postId + '?token=' + token, {token:token}).then(function (response) {
 
                     // success: load data again to refresh the page
                     $scope.loadData();

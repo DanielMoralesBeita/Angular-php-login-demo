@@ -1,6 +1,7 @@
 <?php
-header('Access-Control-Allow-Origin: http://localhost:9000');
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+
 
 /**
  * Step 1: Require the Slim Framework
@@ -171,7 +172,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
             echo 'The actual OPTIONS call. token: ';            
         });
 
-        $app->post('/d/job/:id', function($id) use($app, $trucking) {
+        $app->delete('/job/:id', function($id) use($app, $trucking) {
             // make sure user token is valid.
             $token = $app->request()->get('token');
 
@@ -210,9 +211,11 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                 $password = (isset($json->password)) ? trim($json->password) : "";//trim($app->request()->post('password'));
 
                 try {
+                    
                 // query the database
-                $sql = "SELECT user_id, username, firstname, salt, pwd, user_role FROM Users WHERE username = :username";
-                $pdo = new PDO('mysql:host='. DB_HOST .';dbname='. DB_NAME . ';charset=utf8', DB_USER, DB_PASS);  
+                $sql = "SELECT user_id, user_name, user_active, user_password_hash, user_role FROM users WHERE user_name = :username";
+                $pdo = new PDO('mysql:host='. DB_HOST .';dbname='. DB_NAME . ';charset=utf8', DB_USER, DB_PASS); 
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
                 $query = $pdo->prepare($sql);
                 $query->bindValue(':username', $username, PDO::PARAM_STR);
                 $query->execute();
@@ -221,7 +224,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                 // we have user. I saw that it might not be a good practice to do this check.
                 if(count($result) > 0){
                     // let's verify the credentials.
-                    $storedPassword = $result->pwd;
+                    $storedPassword = $result->user_password_hash;
                 
                     if(password_verify($password, $storedPassword)){
                         // we have an user, let's create the TOKEN
@@ -229,7 +232,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
 
                         // encode the array
                         $jwt = JWT::encode(
-                            token($result->user_id, $result->username, $result->user_role), // data returned by the function
+                            token($result->user_id, $result->user_name, $result->user_role), // data returned by the function
                             $secretKey,
                             'HS256'
                         );
@@ -248,7 +251,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                 }
             }catch(Exception $ex){
                 header("HTTP/1.0 401 Not Authorized");
-                echo '{"status":"fail", "message":"Unable to log you in. Please contact your system administrator"}';
+                echo '{"status":"fail", "message":"Unable to log you in. Please contact your system administrator"'.$ex->getMessage().' }';
             } 
             }
             else{
@@ -313,7 +316,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                         
                         $pdo = $db->getConnection();
                         
-                        $query = $pdo->prepare("SELECT username from Users WHERE username = :username");
+                        $query = $pdo->prepare("SELECT user_name from users WHERE user_name = :username");
                         $query->bindValue(':username', $username, PDO::PARAM_STR);
                         $query->execute();
                         $result = $query->fetchAll();   
@@ -328,7 +331,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                                 $options = ['cost' => 12,];
                                 $user_password_hash = password_hash($password, PASSWORD_BCRYPT, $options);
 
-                                $new_user = $pdo->prepare("INSERT INTO Users (username, pwd, email, date_created) VALUES (:username, :user_password_hash, :email, NOW())");
+                                $new_user = $pdo->prepare("INSERT INTO users (user_name, user_password_hash, user_email, user_registration_datetime) VALUES (:username, :user_password_hash, :email, NOW())");
                                 $new_user->bindValue(':username', $username, PDO::PARAM_STR);
                                 $new_user->bindValue(':user_password_hash', $user_password_hash, PDO::PARAM_STR);
                                 $new_user->bindValue(':email', $email, PDO::PARAM_STR);
@@ -375,7 +378,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
 
         $app->post('/logout', function() use ($app, $db){
             if($app->request->getMethod() == "POST"){
-                echo '{"status":"OK", "message":"You are now signed out of Desitiny Raid Finder!"}';
+                echo '{"status":"OK", "message":"You are now signed out of 343Trucking.com!"}';
             }
         });
 

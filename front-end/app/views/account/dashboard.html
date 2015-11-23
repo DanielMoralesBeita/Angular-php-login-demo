@@ -20,7 +20,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="myposts in posts">
-                <td><a href="#/trabajos-details/{{myposts.id}}/{{myposts.owner_id}}">{{myposts.title}}</a></td>
+                <td><a href="#/trabajos-details/{{myposts.id}}/{{myposts.ownerID}}">{{myposts.title}}</a></td>
                 <td>{{myposts.description}}</td>
                 <td>{{myposts.datePosted}}</td>
                 <td><button class="btn btn-danger" ng-click="removePost(myposts.id)">remove</button></td>

@@ -17,7 +17,7 @@
 	    $scope.title = 'trabajos';
 
         // api/all-trabajos
-	    $http.get('http://localhost:62774/api/v1/trucking/jobs')
+	    $http.get('http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/trucking/jobs')
 	    .success(function(data){
 	    	$scope.clasificados = data;
             $('#spinner').addClass('hide');

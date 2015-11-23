@@ -16,7 +16,7 @@
             $scope.message = '';
 
             // do the call to the http
-            var url = 'http://localhost:62774/api/v1/trucking/searchJobs?searchTerm=';
+            var url = 'http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/trucking/searchJobs?searchTerm=';
             var searchTerm = $routeParams.searchTerm;
             
             $http.get(url + searchTerm)

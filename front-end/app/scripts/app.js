@@ -45,10 +45,6 @@ angular
                 templateUrl: 'views/detalles.html',
                 controller: 'DetallesCtrl'
             })
-            .when('/precios', {
-                templateUrl: 'views/precios.html',
-                controller: 'PreciosCtrl'
-            })
             .when('/account/login', {
                 templateUrl: 'views/account/login.html',
                 controller: 'LoginCtrl'
@@ -79,11 +75,7 @@ angular
             .when('/trabajos-details/:jobid/:ownerId', {
                 templateUrl: 'views/trabajos-details.html',
                 controller: 'JobDetailsCtrl'
-            })
-            .when('/for-sale/:all', {
-                templateUrl: 'views/for-sale.html',
-                controller: 'ForSaleCtrl'
-            })
+            })            
             .when('/results/:searchTerm', {
                 templateUrl: 'views/results.html',
                 controller: 'ResultsCtrl'
@@ -123,4 +115,5 @@ angular
         if (authFact.isUserAuthenticated()) {
             $rootScope.isUserAuthenticated = authFact.isUserAuthenticated();
         }
+
     });

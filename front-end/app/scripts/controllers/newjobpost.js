@@ -28,7 +28,7 @@
 	    
 	    var req = {
 			method: 'POST',
-			url: 'http://localhost:62774/api/v1/trucking/job',
+			url: 'http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/trucking/job',
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 			data: $scope.job
 		};

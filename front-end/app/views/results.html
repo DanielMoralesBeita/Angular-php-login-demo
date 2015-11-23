@@ -2,28 +2,20 @@
 <div class="container">
     <div class="col-md-3 no-padding-left">
         <p>&nbsp;</p>
-        <p class="font-text-bold">Categorias</p>
-        <p><a href="#/trabajos">Trabajos</a> </p>
-        <!--
-        <p>Trucks for Sale</p>
-        <p>Trailers and Containers</p>
-        <p>Mechanics</p>
-        <p>Maintanance</p>
-        <p>Electricians</p>
-        <p>General Services</p>    
-        -->
-        <p class="text-muted" style="font-size:10px">Mas categorias muy pronto</p>           
+        <p class="font-text-bold">Categories</p>
+        <p><a href="#/trabajos">Jobs</a> </p>
+        <p class="text-muted" style="font-size:10px">More categories soon</p>           
         <p class="border-bottom"></p>
     </div>
     <div class="col-md-9 container-data-list-parts">
         <!-- generate the content -->
-        <h3><span id="ContentPlaceHolder1_label">Resultados</span> » </h3>
+        <h3><span id="ContentPlaceHolder1_label">Results</span> » </h3>
         <table>
             <tr ng-repeat="ads in searchResults">
                 <td>
                     <!--#details/:category/:id-->
-                    <h3><a href="#/trabajos-details/{{ads.id}}/{{ads.owner_id}}">{{ads.title}}</a></h3>
-                    <p>Posted by: LilosTruck, Inc</p>
+                    <h3><a href="#/trabajos-details/{{ads.id}}/{{ads.ownerID}}">{{ads.title}}</a></h3>
+                    <p>{{ads.company}}</p>
                     <p>
                         {{ads.description}}
                     </p>
