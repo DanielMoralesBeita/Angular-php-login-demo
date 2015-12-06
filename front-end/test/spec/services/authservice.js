@@ -1,18 +1,12 @@
 'use strict';
 
-describe('Service: AuthService', function () {
+describe('authFact service', function () {
+    describe('AuthFact should not be null', function () {
+        beforeEach(module('343LandingPageApp'));
+        it('returns 1', inject(function (authFact) { //parameter name = service name
 
-  // load the service's module
-  beforeEach(module('343LandingPageApp'));
+            expect(authFact).not.toBeNull();
 
-  // instantiate service
-  var AuthService;
-  beforeEach(inject(function (_AuthService_) {
-    AuthService = _AuthService_;
-  }));
-
-  it('should do something', function () {
-    expect(!!AuthService).toBe(true);
-  });
-
+        }));
+    });
 });

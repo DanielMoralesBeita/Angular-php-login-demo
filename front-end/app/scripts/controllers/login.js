@@ -11,12 +11,12 @@
      */
     angular.module('343LandingPageApp')
         .controller('LoginCtrl', ['$scope', '$location', '$http', '$rootScope', 'authFact', function ($scope, $location, $http, $rootScope, authFact) {
-
+            /*
             var user = {
                 username: '',
-                password: '',
+                password: ''
             };
-
+            */
             $scope.login = function () {
                 authFact.login($scope.user).then(function (response) {
                     // success                
@@ -39,7 +39,6 @@
                     window.alert('error:' + response.data.message);
                 });
             };
-
 
 	}]);
 

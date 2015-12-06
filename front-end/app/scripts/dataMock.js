@@ -141,7 +141,7 @@
 		];
 
 	// returns the current list of trabajos
-	$httpBackend.whenGET('api/all-trabajos').respond(clasificados);
+	$httpBackend.whenGET('http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/trucking/jobs').respond(clasificados);
 
 	
 	var jobdata = {
@@ -160,7 +160,7 @@
 	    'aboutUs': 'about us'
 	};
 
-	$httpBackend.whenGET('api/trabajos/1').respond(jobdata);
+	$httpBackend.whenGET('http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/trucking/jobs/1/23454').respond(jobdata);
 
 	// pass 
 	$httpBackend.whenGET(/views\/.*/).passThrough();

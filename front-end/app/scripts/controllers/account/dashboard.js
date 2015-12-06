@@ -9,9 +9,8 @@
  */
 angular.module('343LandingPageApp')
     .controller('AccountDashboardCtrl', ['$scope', '$http', 'authFact', '$location', function ($scope, $http, authFact, $location) {
-
+        var test = 'test';
         var token = JSON.parse(authFact.getToken()).token;
-
         var url = 'http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/account/dashboard';
 
         $scope.loadData = function () {
@@ -32,6 +31,7 @@ angular.module('343LandingPageApp')
          * @description
          * Removes the post from the users profile
          */
+       
         $scope.removePost = function (postId) {            
             
             if (window.confirm("Are you sure you want to delete this?")) {
@@ -49,7 +49,8 @@ angular.module('343LandingPageApp')
                     console.log(error.data);
                 });
             }
-        }
+        };
+        
 
         /**
          * @description

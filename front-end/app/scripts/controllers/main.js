@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @ngdoc function
  * @name 343LandingPageApp.controller:MainCtrl
@@ -7,8 +5,13 @@
  * # MainCtrl
  * Controller of the 343LandingPageApp
  */
-angular.module('343LandingPageApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.test = 'MainCtrl';
+(function () {
+    'use strict';
+    angular.module('343LandingPageApp')
+    .controller('MainCtrl', function ($scope) {
 
-  });
+        // Variable to
+        $scope.test = 'MainCtrl';
+
+    });
+} ());
