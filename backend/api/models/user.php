@@ -17,7 +17,7 @@ class User {
 
         try {
             // query the database
-            $sql = "SELECT user_id, username, firstname, salt, pwd, user_role FROM Users WHERE username = :username";
+            $sql = "SELECT user_id, user_name, user_password_hash, user_role FROM users WHERE user_name = :username";
             $pdo = $this->db->getConnection();
             $query = $pdo->prepare($sql);
             $query->bindValue(':username', $username, PDO::PARAM_STR);

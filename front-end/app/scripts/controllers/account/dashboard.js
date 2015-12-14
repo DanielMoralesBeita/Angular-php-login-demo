@@ -28,10 +28,9 @@ angular.module('343LandingPageApp')
         }
 
         /**
-         * @description
-         * Removes the post from the users profile
-         */
-       
+        * @description
+        * Removes the post from the users profile
+        */       
         $scope.removePost = function (postId) {            
             
             if (window.confirm("Are you sure you want to delete this?")) {
@@ -53,14 +52,54 @@ angular.module('343LandingPageApp')
         
 
         /**
+         * @name editJob
          * @description
          * Edits the job details for this job
+         * @param {Integer} id
          */
-        $scope.editJob = function (id) {
-            alert('the id of the item is: ' + id);
+        $scope.loadForm = function (mypost) {            
+            $scope.jobObject = {
+                id: mypost.id,
+               title : mypost.title,
+               description: mypost.description,
+               requirements: mypost.requirements,
+               location: mypost.location,
+               compensation: mypost.compensation,
+               benefits: mypost.benefits,
+               howToApply: mypost.howToApply,
+               datePosted: mypost.datePosted
+            };
+        }
 
-            //load data again to refresh the page
-            $scope.loadData();
+        $scope.update = function(mypost){
+            $scope.jobObject = {
+               id: mypost.id,
+               title : mypost.title,
+               description: mypost.description,
+               requirements: mypost.requirements,
+               location: mypost.location,
+               compensation: mypost.compensation,
+               benefits: mypost.benefits,
+               howToApply: mypost.howToApply,
+               datePosted: mypost.datePosted
+            };
+
+            var urlRequest = 'http://neadcom.wwwss24.a2hosted.com/343TruckingAPI/api/v1/trucking/job/update?token=' + token;
+
+            var req = {
+			    method: 'POST',
+			    url: urlRequest,
+			    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			    data: $scope.jobObject
+		    };
+
+            // send the request to post
+            $http(req).then(function(response){
+                alert('Succes');
+                $scope.loadData();
+            }, function(error){
+                alert('Failure')
+            });
         }
 
         if (authFact.isUserAuthenticated()) {

@@ -185,10 +185,33 @@ class Trucking {
     /**
     * @name editJobPost
     * @description
-    * Allows to edit the job by ID
+    * Allows to edit the job by passing a json object to it.
     */
-    public function editJobPost($jodId) {
-        $sql = "UPDATE SET ";
+    public function editJobPost($json) {
+        try {  
+                  
+            $pdo = $this->db->getConnection();
+            $sql = "UPDATE trucking_jobs SET title = :title, description = :description, requirements = :requirements, location = :location, compensation = :compensation, benefits = :benefits, howToApply = :howToApply WHERE id = :id LIMIT 1";
+            $query = $pdo->prepare($sql);
+            $query->bindValue(':title', trim($json->title), PDO::PARAM_STR);
+            $query->bindValue(':description', trim($json->description), PDO::PARAM_STR);
+            $query->bindValue(':requirements', trim($json->requirements), PDO::PARAM_STR);
+            $query->bindValue(':location', trim($json->location), PDO::PARAM_STR);
+            $query->bindValue(':compensation', trim($json->compensation), PDO::PARAM_STR);
+            $query->bindValue(':benefits', trim($json->benefits), PDO::PARAM_STR);
+            $query->bindValue(':howToApply', trim($json->howToApply), PDO::PARAM_STR);
+            $query->bindValue(':id', trim($json->id), PDO::PARAM_INT);
+
+            if($query->execute()){
+                return true;
+            } else {
+                return false;
+            }
+            
+
+        } catch(Exception $e){
+              return $e->getMessage();
+        }        
     }
 
     /**
@@ -238,7 +261,6 @@ class Trucking {
             return NULL;
         }
     }
-
 }
 
 ?>

@@ -34,8 +34,6 @@ $app->response->headers->set('Content-Type', 'application/json');
  * argument for `Slim::get`, `Slim::post`, `Slim::put`, `Slim::patch`, and `Slim::delete`
  * is an anonymous function.
  */
-
-// include the libray
 require_once('includes/php-jwt-master/src/JWT.php');
 require_once('includes/php-jwt-master/src/SignatureInvalidException.php');
 require_once('includes/php-jwt-master/src/BeforeValidException.php');
@@ -58,7 +56,7 @@ $trucking = new Trucking($db);
 /**
 * @name isTokenValid
 * @description
-* Helps in decoding the Token. If it's valid, returns the decoded_array. Otherwise, returns null
+* Helps in decoding the Token that is sent from the client. If it's valid, returns the decoded_array. Otherwise, returns null
 */
 function isTokenValid($tokenFromClient){
     try {                    
@@ -74,7 +72,7 @@ function isTokenValid($tokenFromClient){
         // let's also decode so we can access some info about the user.
         $decoded_array = (array) $token;
 
-        // return
+        // the returned decode_array contains information about the user--user_id, token expiration.
         return $decoded_array;
 
     } catch(Exception $e){
@@ -83,27 +81,25 @@ function isTokenValid($tokenFromClient){
     }
 }
 
-// GET route
-$app->get('/', function () {
-    echo 'home';
-});
-
 /**
-* My Account code 
+* Route for handleling versions. 
 */
 $app->group('/v1', function () use ($app, $db, $trucking) {
 
     /**
-    *   Trucking routes
-    */
+     * Trucking related routes.
+     */
     $app->group('/trucking', function() use($app, $db, $trucking){
         
         /**
-        *   Adds a new job to the list
+        * Adds a new job to the list
+        * @route /v1/trucking/job type POST
         */
         $app->post('/job', function() use($app, $db, $trucking){
             try {
+
                 $data = file_get_contents("php://input");
+                
                 $request = json_decode($data);
 
                 $decoded_array = isTokenValid($request->token);
@@ -128,20 +124,23 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
             catch(Exception $e){
                 header("HTTP/1.0 400 Bad data submitted");
                 echo '{"status":"fail","message":"Data is not in correct format."}';
-            }
-             
+            }             
         });
 
         /**
-        *   GET list of jobs
+        * @description
+        * Get request to get list of available jobs.
         */
         $app->get('/jobs', function() use($app, $db, $trucking){
             if($app->request->isGet()){
-                // return the list of jobs available
                 echo $trucking->getJobs();       
             }
         });
 
+        /**
+        * @description
+        * Route to handle job details. We pass the owner id to get the company profile.
+        */
         $app->get('/jobs/:id/:ownerId', function($id, $owner_id) use($app, $db, $trucking){
              echo $trucking->getJobDetails($id, $owner_id);
         });
@@ -165,20 +164,23 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
 
         /**
         * @description
-        * @API /trucking/job      DELETE
+        * This option route is created because Angular $http.delete method
+        * sends as such. After testing however, by adding the delete request
+        * it started working.
         */
         $app->options('/job/:id', function($id) use($app, $trucking) {
             // make sure user token is valid.
             echo 'The actual OPTIONS call. token: ';            
         });
-
+        // Handles the main request for deleting an item from the user account.
         $app->delete('/job/:id', function($id) use($app, $trucking) {
-            // make sure user token is valid.
-            $token = $app->request()->get('token');
+            
+            $tokenFromClient = $app->request()->get('token');
 
-            if(isTokenValid($token) != null){
+            if(isTokenValid($tokenFromClient) != null){
 
-                $decoded_array = isTokenValid($token);
+                $decoded_array = isTokenValid($tokenFromClient);
+
                 $owner_id = $decoded_array['data']->userId;
 
                 // process request
@@ -196,9 +198,39 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
             }
                 
         });
+
+        /**
+        * @description
+        * Updates a single job object
+        * @API /v1/trucking/job      POST
+        */        
+        $app->post('/job/update', function() use($app, $trucking){
+            
+            $token = $app->request()->get('token');
+            $data = file_get_contents("php://input");
+            $request = json_decode($data);
+            
+            if(isTokenValid($token) != null){
+
+                $decoded_array = isTokenValid($token);
+                $owner_id = $decoded_array['data']->userId;
+
+                if($trucking->editJobPost($request)){
+                    // success deleting the job post
+                    echo '{"status":"OK", "message":"Job updated succesfully LOL"}';
+                } else {
+                    // failure in deleting the item. The job post might have been removed already.
+                    echo '{"status":"fail", "message":"The job update failed"}';
+                }
+                
+            } else {
+                // return header with a 401 status code.
+                header("HTTP/1.0 401 Not Authorized");
+                echo '{"status":"fail", "message":"Your session has experied. Please log in again."}';
+            }
+        });
     });
-
-
+    
     // my account api
     $app->group('/account', function() use($app, $db, $trucking){
         
@@ -207,67 +239,73 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
             if($app->request->isPost()){
                 $json = json_decode(file_get_contents("php://input"));
 
-                $username = (isset($json->username)) ? trim($json->username) : "";//trim($app->request()->post('username'));
-                $password = (isset($json->password)) ? trim($json->password) : "";//trim($app->request()->post('password'));
+                $username = (isset($json->username)) ? trim($json->username) : "";
+                $password = (isset($json->password)) ? trim($json->password) : "";
 
                 try {
                     
-                // query the database
-                $sql = "SELECT user_id, user_name, user_active, user_password_hash, user_role FROM users WHERE user_name = :username";
-                $pdo = new PDO('mysql:host='. DB_HOST .';dbname='. DB_NAME . ';charset=utf8', DB_USER, DB_PASS); 
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
-                $query = $pdo->prepare($sql);
-                $query->bindValue(':username', $username, PDO::PARAM_STR);
-                $query->execute();
-                $result = $query->fetch(PDO::FETCH_OBJ);
-        
-                // we have user. I saw that it might not be a good practice to do this check.
-                if(count($result) > 0){
-                    // let's verify the credentials.
-                    $storedPassword = $result->user_password_hash;
+                    // query the database
+                    $sql = "SELECT user_id, user_name, user_active, user_password_hash, user_role FROM users WHERE user_name = :username";
+
+                    $pdo = new PDO('mysql:host='. DB_HOST .';dbname='. DB_NAME . ';charset=utf8', DB_USER, DB_PASS); // <-- marked to be removed.
+                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // <-- marked to be removed and use the class instead.
+                    $query = $pdo->prepare($sql);
+                    $query->bindValue(':username', $username, PDO::PARAM_STR);
+                    $query->execute();
+                    $result = $query->fetch(PDO::FETCH_OBJ);
+                        
+                    // we have user. I saw that it might not be a good practice to do this check.
+                    if(count($result) > 0){
+                        // let's verify the credentials.
+                        $storedPassword = $result->user_password_hash;
                 
-                    if(password_verify($password, $storedPassword)){
-                        // we have an user, let's create the TOKEN
-                        $secretKey = base64_decode(SECRET_KEY);
+                        if(password_verify($password, $storedPassword)){
+                            // we have an user, let's create the TOKEN
+                            $secretKey = base64_decode(SECRET_KEY);
 
-                        // encode the array
-                        $jwt = JWT::encode(
-                            token($result->user_id, $result->user_name, $result->user_role), // data returned by the function
-                            $secretKey,
-                            'HS256'
-                        );
+                            // encode the array
+                            $jwt = JWT::encode(
+                                token($result->user_id, $result->user_name, $result->user_role), // data returned by the function
+                                $secretKey,
+                                'HS256'
+                            );
 
-                        $enencodedArray = array('jwt' => $jwt);
-                        echo json_encode($enencodedArray);
+                            $enencodedArray = array('jwt' => $jwt);
+
+                            // return the Token to the client.
+                            echo json_encode($enencodedArray);
+                        }
+                        else {
+                            header("HTTP/1.0 401 Not Authorized");
+                            echo '{"status":"fail", "message":"Unable to log you in. Please try again!"}';
+                        }
                     }
-                    else {
+                    else{
                         header("HTTP/1.0 401 Not Authorized");
                         echo '{"status":"fail", "message":"Unable to log you in. Please try again!"}';
                     }
-                }
-                else{
+                } catch(Exception $ex) {
                     header("HTTP/1.0 401 Not Authorized");
-                    echo '{"status":"fail", "message":"Unable to log you in. Please try again!"}';
-                }
-            }catch(Exception $ex){
-                header("HTTP/1.0 401 Not Authorized");
-                echo '{"status":"fail", "message":"Unable to log you in. Please contact your system administrator"'.$ex->getMessage().' }';
-            } 
+                    echo '{"status":"fail", "message":"Unable to log you in. Please contact your system administrator"}';
+                } 
             }
-            else{
+            else {
                 // method is not post
                 header("HTTP/1.0 405 Method Not Allowed");
             }
-
         });
 
-        // register
+        /*
+        * @description
+        * Route to handle registration for new users.
+        * /v1/trucking/account/register
+        */
         $app->post('/register', function() use ($app, $db){
             if($app->request->getMethod() == "POST"){       
                 // initialize array of errors.
                 $errors = array();
 
-                $user_role = "admin";
+                $user_role = "admin"; // <-- no need for this since this was done with user roles in mind.
 
                 $json = json_decode(file_get_contents("php://input"));
         
@@ -276,7 +314,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                     $username = (isset($json->username)) ? trim($json->username) : "";
                     $password = (isset($json->password)) ? trim($json->password) : "";
                     $pwdConfirm = (isset($json->confirmPassword)) ? trim($json->confirmPassword) : "";
-                    $email = (isset($json->email)) ? trim($json->email) : "" ; //trim($json->email);
+                    $email = (isset($json->email)) ? trim($json->email) : "" ;
                     
                     $userRole = 'basic';
 
@@ -285,7 +323,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
             
                     if(empty($username)){
                         header("HTTP/1.0 401 Invalid submitted data");
-                        echo '{"status":"fail", "message":"Username field cannot be empty"}';//json_encode($errors);
+                        echo '{"status":"fail", "message":"Username field cannot be empty"}';
                     }
                     elseif(strlen($username) < 6){
                         header("HTTP/1.0 401 Invalid submitted data");
@@ -312,8 +350,8 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                         echo '{"status":"fail", "message":"Please input valid email address!"}';
                     }
                     elseif($db->isConnected()){
+
                         // let's make sure user doesn't exists
-                        
                         $pdo = $db->getConnection();
                         
                         $query = $pdo->prepare("SELECT user_name from users WHERE user_name = :username");
@@ -323,7 +361,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
 
                         if(count($result) > 0 || count($errors) > 0) {
                             header("HTTP/1.0 401 Invalid submitted data");
-                            echo '{"status":"fail", "message":"Please make sure your password or username are valids"}';//json_encode($errors);
+                            echo '{"status":"fail", "message":"Please make sure your password or username are valids"}';
                         } else {
 
                             // check to see if we don't have errors
@@ -338,11 +376,8 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                         
                                 $new_result = $new_user->execute();
                     
-                                // get the id of the last user
-                                //$user_id = $pdo->lastInsertId();
-
                                 if($new_result){
-                                    // we have succeded in adding the user
+                                    // we have succeded in adding the user.
                                     echo '{"status":"OK", "message":"User created succesfully. Please check your email address for confirmation.", "email":"'.$email.'"}';
                                 }
                                 else {
@@ -350,7 +385,6 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                                     header("HTTP/1.0 403 Not enough credentials");
                                     echo '{"status":"fail","message":"Registration failed. Not your fault. Please try again!"}';
                                 }
-
                             }
                             catch(PDOException $ex){
                                 $ex->getMessage();
@@ -373,9 +407,16 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                 header("HTTP/1.0 405 Method Not Allowed");
             }
 
-        }); // <-- end of Register
+        }); // <-- end of Register Route
 
 
+        /**
+        * @description
+        * Request to handle loggin outs. Right now, it's not doing anything as the
+        * removing of the token happens on the client. Therefore, if a new request is
+        * initiated, the application should request a valid Token. Thus, causing the user
+        * to log in again.
+        */
         $app->post('/logout', function() use ($app, $db){
             if($app->request->getMethod() == "POST"){
                 echo '{"status":"OK", "message":"You are now signed out of 343Trucking.com!"}';
@@ -385,10 +426,11 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
         /**
         *   @description
         *   This will get the account information of the user that's logged in.
-        *   For now, we will only get the jobs that the user has active and inactive and retrieve
-        *   account cancellation, activation, post new add, remove or cancel add, and that.
+        *   For now, we will only get the jobs that the user has active and inactive and 
+        *   to allow them to add new jobs, update current ones, and delete jobs.
         */
         $app->get('/dashboard', function() use ($app, $trucking){
+            
             $tokenFromClient = $app->request()->get('token');
 
             if($tokenFromClient){
@@ -402,7 +444,7 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
                     // decode the key
                     $token = JWT::decode($tokenFromClient, $secretKey, array('HS256'));
 
-                    // if no exception twron here, we are good to go.
+                    // if no exception here, we are good to go.
                     // let's also decode so we can access some info about the user.
                     $decoded_array = (array) $token;
 
@@ -431,21 +473,6 @@ $app->group('/v1', function () use ($app, $db, $trucking) {
 });
 
 
-// PUT route
-$app->put('/put', function () {
-    echo 'This is a PUT route';
-});
-
-// PATCH route
-$app->patch('/patch', function () {
-    echo 'This is a PATCH route';
-});
-
-// DELETE route
-$app->delete('/delete', function () {
-    echo 'This is a DELETE route';
-});
-
 /**
  * Step 4: Run the Slim application
  *
@@ -453,3 +480,4 @@ $app->delete('/delete', function () {
  * and returns the HTTP response to the HTTP client.
  */
 $app->run();
+?>

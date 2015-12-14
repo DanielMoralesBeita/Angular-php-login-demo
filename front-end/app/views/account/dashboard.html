@@ -24,9 +24,58 @@
                 <td>{{myposts.description}}</td>
                 <td>{{myposts.datePosted}}</td>
                 <td><button class="btn btn-danger" ng-click="removePost(myposts.id)">remove</button></td>
-                <td><button class="btn btn-primary" ng-click="editJob(myposts.id)">Edit</button></td>
+                <td><button class="btn btn-primary" data-toggle="modal" ng-click="loadForm(myposts)" data-target="#myModal">Edit</button></td>
             </tr>
         </tbody>
     </table>    
+
+    <!--Modal Popup-->
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit your job post</h4>
+      </div>
+      <div class="modal-body">
+          <p>
+            <label>Title</label>
+            <input class="form-control" ng-model="jobObject.title" /></p>
+            <p>
+            <label>Description</label>
+            <textarea class="form-control" rows="4" ng-model="jobObject.description"></textarea></p>
+            
+          <p>
+            <label>Requirements</label>
+            <input class="form-control" ng-model="jobObject.requirements"></p>
+
+            
+          <p>
+            <label>Location</label>
+            <input class="form-control" ng-model="jobObject.location"></p>
+
+            
+          <p><label>Compensation</label>
+            <input class="form-control" ng-model="jobObject.compensation"></p>
+          
+          <p>
+            <label>Benefits</label>
+            <input class="form-control" ng-model="jobObject.benefits"></p>
+
+            
+          <p><label>How to Apply</label>
+            <textarea class="form-control" ng-model="jobObject.howToApply"></textarea></p>
+         
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="update(jobObject)">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
     
 </div>
